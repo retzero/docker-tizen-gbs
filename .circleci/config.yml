@@ -1,0 +1,11 @@
+version: 2
+jobs:
+ build:
+   machine: true
+   steps:
+     - checkout
+
+     - run: docker build -t retzero/gbs_ubuntu16.04 .
+
+     #- run: docker push company/app:$CIRCLE_BRANCH
+     
