@@ -5,7 +5,8 @@ jobs:
    steps:
      - checkout
 
+     - run: docker login -u $DOCKER_LOGIN_ID -p $DOCKER_LOGIN_PASSWORD
+
      - run: docker build -t retzero/gbs_ubuntu16.04 .
 
-     #- run: docker push company/app:$CIRCLE_BRANCH
-     
+     - run: docker push retzero/gbs_ubuntu16.04
