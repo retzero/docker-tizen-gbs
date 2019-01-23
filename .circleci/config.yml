@@ -4,6 +4,8 @@ jobs:
    machine: true
    steps:
      - checkout
+     
+     - setup_remote_docker
 
      - run: docker login -u $DOCKER_LOGIN_ID -p $DOCKER_LOGIN_PASSWORD
 
