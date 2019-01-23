@@ -13,7 +13,6 @@ RUN apt-get install -y --force-yes gbs
 
 RUN apt-get -y install vim wget
 
-RUN /usr/sbin/update-binfmts --disable
-RUN systemctl disable binfmt-support.service
+find /proc/sys/fs/binfmt_misc/ -not -name status -not -name register -type f -exec sh -c "echo -1 | tee {}" \;
 
 WORKDIR /opt/repo/
