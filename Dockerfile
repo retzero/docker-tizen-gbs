@@ -13,6 +13,7 @@ RUN apt-get install -y --force-yes gbs
 
 RUN apt-get -y install vim wget
 
-find /proc/sys/fs/binfmt_misc/ -not -name status -not -name register -type f -exec sh -c "echo -1 | tee {}" \;
+# Disble update-binfmt for running gbs build
+RUN find /proc/sys/fs/binfmt_misc/ -not -name status -not -name register -type f -exec sh -c "echo -1 | tee {}" \;
 
 WORKDIR /opt/repo/
