@@ -1,12 +1,12 @@
 version: 2
 jobs:
  build:
-   machine: true
+   docker:
+      - image: circleci/python:3.6.3
    steps:
      - checkout
-     
+     - setup_remote_docker: 
+          docker_layer_caching: true
      - run: docker login -u $DOCKER_LOGIN_ID -p $DOCKER_LOGIN_PASSWORD
-
      - run: docker build -t retzero/gbs_ubuntu16.04 .
-
      - run: docker push retzero/gbs_ubuntu16.04
