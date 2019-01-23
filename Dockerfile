@@ -1,6 +1,6 @@
 FROM ubuntu:xenial
 
-MAINTAINER Dorr First <dorr.first@gmail.com>
+MAINTAINER Hyokeun Jeon <hyokeun@gmail.com>
 
 ENV DEBIAN_FRONTEND=noninteractive \
     TERM=xterm
@@ -12,5 +12,8 @@ RUN apt-get update
 RUN apt-get install -y --force-yes gbs
 
 RUN apt-get -y install vim wget
+
+RUN  /usr/sbin/update-binfmts --disable && \
+    systemctl disable binfmt-support.service
 
 WORKDIR /opt/repo/
