@@ -13,7 +13,7 @@ RUN apt-get install -y --force-yes gbs
 
 RUN apt-get -y install vim wget
 
-# Disble update-binfmt for running gbs build
-RUN find /proc/sys/fs/binfmt_misc/ -not -name status -not -name register -type f -exec sh -c "echo -1 | tee {}" \;
+# Binfmt configuration
+RUN sed -i "2a\\find /proc/sys/fs/binfmt_misc/ -name \"qemu-*\" -type f -exec sh -c \"echo -1 | tee {}\" \\\;" /usr/local/bin/dockerd-entrypoint.sh
 
 WORKDIR /opt/repo/
