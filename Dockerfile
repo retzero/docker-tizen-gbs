@@ -10,5 +10,5 @@ RUN apt-get update
 RUN apt-get install -y --force-yes wget gbs
 
 # Binfmt configuration
-RUN sed -i "2a\\find /proc/sys/fs/binfmt_misc/ -name \"qemu-*\" -type f -exec sh -c \"echo -1 | tee {}\" \\\;" /usr/local/bin/dockerd-entrypoint.sh
+RUN find /proc/sys/fs/binfmt_misc/ -name "qemu-*" -type f -exec sh -c "echo -1 | tee {}" \;
 

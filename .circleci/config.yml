@@ -1,11 +1,64 @@
 version: 2
+
 jobs:
  build:
    machine: true
+   working_directory: ~/workspace
+
    steps:
      - checkout
-     #- setup_remote_docker: 
-     #docker_layer_caching: true
-     - run: docker login -u $DOCKER_LOGIN_ID -p $DOCKER_LOGIN_PASSWORD
-     - run: docker build -t retzero/gbs_ubuntu16.04 .
-     - run: docker push retzero/gbs_ubuntu16.04
+
+     - run:
+         name: Build docker image
+         command: |
+           docker build -t tizen_gbs .
+
+     - run:
+         name: Save docker image tarball
+         command: |
+           mkdir -p ~/saved_image
+           docker save -o ~/saved_image/tizen_gbs.tar tizen_gbs
+
+     - persist_to_workspace:
+         root: ~/
+         paths:
+           - saved_image
+
+ release:
+   machine: true
+   working_directory: ~/workspace
+
+   steps:
+     - attach_workspace:
+         at: ~/
+
+     - run:
+         name: Load docker image
+         command: |
+           docker load -i ~/saved_image/tizen_gbs.tar
+           docker tag tizen_gbs ${CIRCLE_USERNAME}/tizen_gbs:latest
+           docker tag tizen_gbs ${CIRCLE_USERNAME}/tizen_gbs:${CIRCLE_TAG:1}
+
+     - run:
+         name: Push to docker hub
+         command: |
+           docker login -u $DOCKER_LOGIN_ID -p $DOCKER_LOGIN_PASSWORD
+           docker push ${CIRCLE_USERNAME}/tizen_gbs:latest
+           docker push ${CIRCLE_USERNAME}/tizen_gbs:${CIRCLE_TAG:1}
+
+workflows:
+  version: 2
+  build-and-release:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - release:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
