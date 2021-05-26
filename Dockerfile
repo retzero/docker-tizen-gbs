@@ -1,14 +1,16 @@
-FROM ubuntu:xenial
+FROM ubuntu:bionic
 
 MAINTAINER Hyokeun Jeon <hyokeun@gmail.com>
 
-# Install gbs
-RUN echo "deb [trusted=yes] http://download.tizen.org/tools/archive/18.01.4/Ubuntu_16.04/ /" >> /etc/apt/sources.list
+RUN echo "deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_18.04/ /" >> /etc/apt/sources.list
 
-RUN apt-get update
-
-RUN apt-get install -y --force-yes wget gbs
+RUN apt update \
+    && apt install -y --force-yes wget gbs zip unzip \
+    && apt autoremove && apt clean && apt autoclean && apt autoclean \
+    && rm -rf /var/cache/apt/archives
 
 # Binfmt configuration
 RUN find /proc/sys/fs/binfmt_misc/ -name "qemu-*" -type f -exec sh -c "echo -1 | tee {}" \;
 
+ENTRYPOINT ["gbs"]
+CMD ["--version"]
